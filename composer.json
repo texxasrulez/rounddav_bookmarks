@@ -2,6 +2,11 @@
     "name": "texxasrulez/rounddav_bookmarks",
     "type": "roundcube-plugin",
     "description": "Plugin for Shared and Private Bookmarks using RoundDAV Server and rounddav_provision plugin",
+    "homepage": "https://github.com/texxasrulez/rounddav_bookmarks",
+	"support": {
+		"issues": "https://github.com/texxasrulez/rounddav_bookmarks/issues",
+		"source": "https://github.com/texxasrulez/rounddav_bookmarks"
+  },
     "license": "GPL-3.0-or-later",
     "authors": [
         {

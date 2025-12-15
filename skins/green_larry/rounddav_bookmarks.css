@@ -1,0 +1,26 @@
+#settings-sections a.rounddav_bookmarks,
+#settings-sections li.rounddav_bookmarks > a,
+a.listitem.rounddav_bookmarks,
+li.rounddav_bookmarks > a {
+  background-image: url('./images/rounddav_bookmarks.svg') !important;
+  background-repeat: no-repeat !important;
+  background-position: 8px center !important;
+  background-size: 18px 18px !important;
+  padding-left: 36px; /* ensure text doesn't overlap the icon */
+}
+
+/* Active/hover/selected state */
+#settings-sections a.rounddav_bookmarks.selected,
+#settings-sections li.rounddav_bookmarks.selected > a,
+a.listitem.rounddav_bookmarks.selected,
+a.listitem.rounddav_bookmarks:focus,
+a.listitem.rounddav_bookmarks:hover,
+li.rounddav_bookmarks > a.selected,
+li.rounddav_bookmarks > a:focus,
+li.rounddav_bookmarks > a:hover {
+  background-image: url('./images/rounddav_bookmarks_act.svg') !important;
+}
+
+#rounddav-bookmarks {
+	background: #edf5d7;
+	}

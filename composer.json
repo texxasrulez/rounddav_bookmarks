@@ -1,0 +1,23 @@
+{
+    "name": "texxasrulez/rounddav_bookmarks",
+    "type": "roundcube-plugin",
+    "description": "Plugin for Shared and Private Bookmarks using RoundDAV Server and rounddav_provision plugin",
+    "license": "GPL-3.0-or-later",
+    "authors": [
+        {
+            "name": "Gene Hawkins",
+            "email": "texxasrulez@yahoo.com",
+            "role": "Lead"
+        }
+    ],
+    "repositories": [
+        {
+            "type": "composer",
+            "url": "https://plugins.roundcube.net"
+        }
+    ],
+    "require": {
+        "php": ">=7.3.0",
+        "roundcube/plugin-installer": ">=0.1.3"
+    }
+}

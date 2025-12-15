@@ -1,0 +1,336 @@
+#rounddav-bookmarks {
+  overflow: auto;
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  padding-top: 2px;
+  padding-right: 10px;
+  padding-bottom: 2px;
+  padding-left: 10px;
+}
+
+.rdv-bookmarks-head {
+  display: flex;
+  margin: 10px;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 20px;
+  margin-bottom: 5px;
+}
+
+.rdv-title-block h2 {
+  margin: 0;
+  font-size: 20px;
+}
+
+.rdv-title-block p {
+  margin: 1px 0 0 0;
+  color: var(--color-font, #555);
+}
+
+.rdv-head-actions {
+  display: flex;
+  gap: 10px;
+  align-items: center;
+}
+
+.rdv-bookmarklet-link {
+  padding: 2px 6px;
+  border-radius: 999px;
+  background: rgba(0,0,0,0.5);
+  color: #fff !important;
+  font-size: 13px;
+}
+
+.rdv-bookmarklet-link:hover {
+  background: #374151;
+}
+
+.rdv-refresh {
+  padding: 6px 14px;
+}
+
+.rdv-form-card {
+  background: rgba(0,0,0,0.03);
+  padding-right: 10px;
+  padding-bottom: 2px;
+  padding-left: 10px;
+  border-radius: 8px;
+}
+
+.rdv-form-columns {
+  display: flex;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+
+.rdv-form-column {
+  flex: 1 1 260px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.rdv-row-wide {
+  margin-top: 1px;
+}
+
+.rdv-filter-card {
+  padding-top: 5px;
+  padding-right: 10px;
+  padding-bottom: 5px;
+  padding-left: 10px;
+  background: rgba(0,0,0,0.03);
+  border-radius: 8px;
+  margin-bottom: 12px;
+}
+
+.rdv-filter-grid {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  align-items: flex-end;
+}
+
+.rdv-filter-field {
+  flex: 1 1 160px;
+  display: flex;
+  flex-direction: column;
+}
+
+.rdv-filter-field label {
+  font-size: 11px;
+  font-weight: 600;
+  text-transform: uppercase;
+  margin-bottom: 4px;
+}
+
+.rdv-filter-field input,
+.rdv-filter-field select {
+  width: 100%;
+  padding: 6px;
+  border-radius: 6px;
+  border: 1px solid rgba(0,0,0,0.2);
+}
+
+.rdv-filter-actions {
+  display: flex;
+  gap: 10px;
+}
+
+.rdv-filter-checkbox label {
+  display: flex;
+  gap: 6px;
+  align-items: center;
+  font-weight: 600;
+  font-size: 12px;
+}
+
+#rdv-bookmark-form label {
+  display: block;
+  margin-top: 2px;
+  font-weight: 600;
+  font-size: 12px;
+  padding: 0px !important;
+  text-transform: uppercase;
+}
+
+#rdv-bookmark-form input,
+#rdv-bookmark-form textarea,
+#rdv-bookmark-form select {
+  width: 95%;
+  margin-top: 0px;
+  padding: 6px;
+  border-radius: 6px;
+  border: 1px solid rgba(0,0,0,0.2);
+}
+
+.rdv-checkbox {
+  display: flex;
+  justify-content: flex-end;
+  align-items: right;
+  gap: 6px;
+  margin-top: 5px;
+  font-weight: 600;
+}
+
+.rdv-form-actions {
+  margin-top: 4px;
+  display: flex;
+  gap: 5px;
+}
+
+.rdv-share-settings {
+  display: none;
+  flex-direction: column;
+  gap: 8px;
+  margin-top: 8px;
+  padding: 10px;
+  border-radius: 6px;
+  border: 1px dashed rgba(0,0,0,0.15);
+  background: rgba(255,255,255,0.5);
+}
+
+.rdv-share-custom {
+  display: none;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.rdv-columns {
+  display: grid;
+  padding: 20px 20px;
+  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+  gap: 20px;
+  flex: 1 1 auto;
+  overflow-y: auto;
+  padding-bottom: 12px;
+}
+
+.rdv-column h3 {
+  margin-top: 0;
+}
+
+.rdv-bookmark-card {
+  display: flex;
+  gap: 12px;
+  border: 1px solid rgba(0,0,0,0.01);
+  border-radius: 8px;
+  padding: 10px;
+  margin-bottom: 12px;
+  background: rgba(0,0,0,0.03);
+}
+
+.rdv-favicon {
+  width: 32px;
+  height: 32px;
+  border-radius: 6px;
+  background: rgba(0,0,0,0.1);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 14px;
+  color: #4b5563;
+  overflow: hidden;
+}
+
+.rdv-bookmark-info a {
+  font-weight: 600;
+  display: inline-block;
+  margin-bottom: 4px;
+}
+
+.rdv-bookmark-info .rdv-meta {
+  max-width: 400px;
+  overflow-wrap: break-word;
+  font-size: 12px;
+}
+
+.rdv-activity-list {
+  max-height: 100%;
+  overflow-y: auto;
+}
+
+.rdv-activity-item {
+  border: 1px solid rgba(0,0,0,0.1);
+  border-radius: 6px;
+  padding: 8px 10px;
+  margin-bottom: 8px;
+  background: #fff;
+  font-size: 12px;
+}
+
+.rdv-activity-item h4 {
+  margin: 0 0 4px 0;
+  font-size: 13px;
+}
+
+.rdv-activity-meta {
+  display: flex;
+  justify-content: space-between;
+  font-size: 11px;
+  color: #6b7280;
+}
+
+.rdv-bookmark-actions {
+  margin-left: auto;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.rdv-bookmark-actions button {
+  border: none;
+  background: transparent;
+  color: #2563eb;
+  cursor: pointer;
+  padding: 0;
+  font-size: 12px;
+}
+
+.rdv-tag {
+  display: inline-block;
+  background: rgba(0,0,0,0.05);
+  padding: 1px 6px;
+  border-radius: 4px;
+  font-size: 11px;
+  font-style: italic;
+  margin-right: 4px;
+}
+
+.rdv-empty {
+  padding: 12px;
+  border: 1px dashed rgba(0,0,0,0.2);
+  border-radius: 6px;
+  font-style: italic;
+}
+
+.rdv-context-menu {
+  position: absolute;
+  background: #fff;
+  border: 1px solid rgba(0,0,0,0.2);
+  border-radius: 6px;
+  box-shadow: 0 8px 20px rgba(0,0,0,0.15);
+  z-index: 9999;
+  width: 210px;
+}
+
+.rdv-context-menu button {
+  width: 100%;
+  padding: 10px;
+  border: none;
+  background: transparent;
+  text-align: left;
+  cursor: pointer;
+}
+
+.rdv-context-menu button:hover {
+  background: rgba(0,0,0,0.05);
+}
+
+.rdv-bookmarklet-popup {
+  padding: 20px;
+}
+
+.rdv-bookmarklet-popup h2 {
+  margin-top: 0;
+}
+
+.rdv-bookmark-list {
+  min-height: 40px;
+}
+
+@media screen and (max-width: 900px) {
+  .rdv-form-columns {
+    flex-direction: column;
+  }
+}
+.rdv-folder-row {
+  display: flex;
+  gap: 10px;
+  align-items: center;
+}
+
+.rdv-folder-row select {
+  flex-grow: 1;
+}

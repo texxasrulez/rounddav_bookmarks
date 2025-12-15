@@ -1,0 +1,3 @@
+.listing.iconized li.rounddav_bookmarks > a:before {
+  content: "\f02e"
+}

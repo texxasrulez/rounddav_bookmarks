@@ -1,6 +1,6 @@
 # RoundDAV Bookmarks
 
-![Downloads](https://img.shields.io/github/downloads/texxasrulez/rounddav_bookmarks/total)
+![Downloads](https://img.shields.io/github/downloads/texxasrulez/rounddav_bookmarks/total?style=plastic&logo=github&logoColor=white&label=Downloads&labelColor=aqua&color=blue)
 [![Packagist Downloads](https://img.shields.io/packagist/dt/texxasrulez/rounddav_bookmarks?style=plastic&logo=packagist&logoColor=white&label=Downloads&labelColor=blue&color=gold)](https://packagist.org/packages/texxasrulez/rounddav_bookmarks)
 [![Packagist Version](https://img.shields.io/packagist/v/texxasrulez/rounddav_bookmarks?style=plastic&logo=packagist&logoColor=white&label=Version&labelColor=blue&color=limegreen)](https://packagist.org/packages/texxasrulez/rounddav_bookmarks)
 [![Github License](https://img.shields.io/github/license/texxasrulez/rounddav_bookmarks?style=plastic&logo=github&label=License&labelColor=blue&color=coral)](https://github.com/texxasrulez/rounddav_bookmarks/LICENSE)
@@ -11,6 +11,14 @@
 [![Donate Paypal](https://img.shields.io/badge/Paypal-Money_Please!-blue.svg?style=plastic&labelColor=blue&color=forestgreen&logo=paypal)](https://www.paypal.me/texxasrulez)
 
 Rich bookmark management for Roundcube that talks to the RoundDAV backend. It lets users store private links, publish domain-wide bookmark collections, and drag a bookmarklet into their browser for one-click saving – all without leaving Roundcube.
+
+This plugin requires:
+
+[RoundDAV Provision Roundcube Plugin](https://github.com/texxasrulez/rounddav_provision)
+
+Recommended companion plugin:
+
+[RoundDAV Files Roundcube Plugin](https://github.com/texxasrulez/rounddav_files)
 
 ---
 

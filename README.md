@@ -43,7 +43,7 @@ Recommended companion plugin:
 
 **Screenshot**
 -----------
-Users Files:
+Users Bookmarks:
 
 ![Alt text](/images/rounddav-bookmarks.png?raw=true "RoundDAV Bookmarks Screenshot")
 

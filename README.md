@@ -41,6 +41,14 @@ Recommended companion plugin:
 
 ---
 
+**Screenshot**
+-----------
+Users Files:
+
+![Alt text](/images/rounddav-bookmarks.png?raw=true "RoundDAV Bookmarks Screenshot")
+
+---
+
 ## Installation
 
 1. Copy the plugin into Roundcube, e.g.:

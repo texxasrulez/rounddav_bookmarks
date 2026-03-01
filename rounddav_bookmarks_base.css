@@ -148,10 +148,25 @@
 .rdv-checkbox {
   display: flex;
   justify-content: flex-end;
-  align-items: right;
+  align-items: center;
   gap: 6px;
   margin-top: 5px;
   font-weight: 600;
+}
+
+#rdv-bookmark-form .rdv-checkbox label[for="rdv-favorite"] {
+  display: inline-block;
+  width: auto;
+  margin: 0;
+  order: 1;
+}
+
+#rdv-bookmark-form .rdv-checkbox #rdv-favorite {
+  width: auto;
+  padding: 0;
+  margin: 0;
+  border: 0;
+  order: 2;
 }
 
 .rdv-form-actions {

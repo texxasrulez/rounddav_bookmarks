@@ -7,6 +7,7 @@ class rounddav_bookmarks extends rcube_plugin
 
     private $rcmail;
     private $api_credentials = [];
+    private $missing_credentials_logged = false;
 
     public function init()
     {
@@ -248,7 +249,11 @@ class rounddav_bookmarks extends rcube_plugin
 
     public function action_list()
     {
-        $filters = isset($_POST['filters']) && is_array($_POST['filters']) ? $_POST['filters'] : [];
+        $filters = rcube_utils::get_input_value('filters', rcube_utils::INPUT_POST);
+        if (!is_array($filters)) {
+            $filters = [];
+        }
+        $filters = $this->sanitize_filters($filters);
 
         $data = $this->api_request('bookmarks/list', [
             'include_shared' => true,
@@ -430,8 +435,12 @@ class rounddav_bookmarks extends rcube_plugin
                 'timeout'   => isset($creds['timeout']) ? (int) $creds['timeout'] : 5,
                 'verify_ssl'=> isset($creds['verify_ssl']) ? (bool) $creds['verify_ssl'] : true,
             ];
+            $this->missing_credentials_logged = false;
         } else {
-            rcube::write_log('errors', 'rounddav_bookmarks: API credentials missing (is rounddav_provision enabled?)');
+            if (!$this->missing_credentials_logged) {
+                rcube::write_log('roundcube', 'rounddav_bookmarks: API credentials missing (is rounddav_provision enabled?)');
+                $this->missing_credentials_logged = true;
+            }
         }
     }
 
@@ -481,6 +490,58 @@ class rounddav_bookmarks extends rcube_plugin
         return $payload;
     }
 
+    private function sanitize_filters(array $filters): array
+    {
+        $out = [];
+
+        $visibility = isset($filters['visibility']) ? (string) $filters['visibility'] : 'all';
+        if (!in_array($visibility, ['all', 'private', 'shared'], true)) {
+            $visibility = 'all';
+        }
+        $out['visibility'] = $visibility;
+
+        if (isset($filters['search'])) {
+            $search = trim((string) $filters['search']);
+            if ($search !== '') {
+                $out['search'] = $search;
+            }
+        }
+
+        if (!empty($filters['favorite_only'])) {
+            $out['favorite_only'] = 1;
+        }
+
+        if (isset($filters['folder_id']) && $filters['folder_id'] !== '') {
+            $out['folder_id'] = (int) $filters['folder_id'];
+        }
+
+        if (isset($filters['folder_visibility'])) {
+            $folderVisibility = (string) $filters['folder_visibility'];
+            if (in_array($folderVisibility, ['private', 'shared'], true)) {
+                $out['folder_visibility'] = $folderVisibility;
+            }
+        }
+
+        if (isset($filters['tags'])) {
+            $tags = $filters['tags'];
+            if (!is_array($tags)) {
+                $tags = explode(',', (string) $tags);
+            }
+            $cleanTags = [];
+            foreach ($tags as $tag) {
+                $tag = trim((string) $tag);
+                if ($tag !== '') {
+                    $cleanTags[] = $tag;
+                }
+            }
+            if ($cleanTags) {
+                $out['tags'] = array_values(array_unique($cleanTags));
+            }
+        }
+
+        return $out;
+    }
+
     private function api_request(string $route, array $payload = [])
     {
         if (!$this->api_credentials) {
@@ -500,6 +561,10 @@ class rounddav_bookmarks extends rcube_plugin
         }
 
         $ch = curl_init($url);
+        if ($ch === false) {
+            rcube::write_log('errors', 'rounddav_bookmarks API error: curl_init failed');
+            $this->json_error($this->gettext('errorgeneric'));
+        }
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
         curl_setopt($ch, CURLOPT_POST, true);
         curl_setopt($ch, CURLOPT_POSTFIELDS, $payload_json);

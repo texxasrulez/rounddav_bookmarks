@@ -62,7 +62,16 @@ Users Bookmarks:
 3. Clear Roundcube’s cache (`bin/cleandb.sh` or `php bin/console cache:clear` depending on your setup) so the new localization strings and skins are picked up.
 4. Log into Roundcube, open **Settings → Bookmarks**, and drag the **RoundDAV Quick Add** link into your browser’s bookmarks bar if you want the bookmarklet.
 
-No additional configuration file is required; all credentials are pulled from `rounddav_provision`.
+No additional configuration file is required for this plugin; it has no separate `config.inc.php.dist`.
+All API credentials are pulled from `rounddav_provision` via the `rounddav_api_credentials` hook.
+
+Credential/settings source of truth:
+
+- `rounddav_provision/config.inc.php`:
+  - `rounddav_api_url`
+  - `rounddav_api_token`
+  - `rounddav_api_timeout`
+  - `rounddav_api_verify_ssl`
 
 ---
 

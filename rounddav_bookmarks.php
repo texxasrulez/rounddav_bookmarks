@@ -2,7 +2,7 @@
 
 class rounddav_bookmarks extends rcube_plugin
 {
-    const PLUGIN_VERSION = '1.0.0';
+    const PLUGIN_VERSION = '1.0.0+dev';
     const PLUGIN_INFO = array(
         'name' => 'rounddav_bookmarks',
         'vendor' => 'Gene Hawkins',
@@ -31,9 +31,9 @@ class rounddav_bookmarks extends rcube_plugin
         $this->add_texts('localization/', true);
         $this->load_api_credentials();
 
-        $this->include_stylesheet($this->asset_url('rounddav_bookmarks_base.css'));
-        $this->include_stylesheet($this->asset_url($this->local_skin_path() . '/rounddav_bookmarks.css', true));
-        $this->include_script($this->asset_url('rounddav_bookmarks.js'));
+        $this->include_stylesheet('rounddav_bookmarks_base.css');
+        $this->include_stylesheet($this->local_skin_path() . '/rounddav_bookmarks.css');
+        $this->include_script('rounddav_bookmarks.js');
 
         $this->rcmail->output->set_env('rounddav_bookmarks_available', $this->api_credentials ? true : false);
         $this->rcmail->output->set_env('rounddav_bookmarks_context_menu', $this->get_context_menu_config());
@@ -585,22 +585,6 @@ class rounddav_bookmarks extends rcube_plugin
         }
 
         return $vars;
-    }
-
-    private function asset_url(string $asset, bool $skin_asset = false): string
-    {
-        $public_path = $asset;
-        $disk_path = $this->home . '/' . ltrim($asset, '/');
-
-        if ($skin_asset) {
-            $public_path = $asset;
-            $disk_path = $this->home . '/' . ltrim($this->local_skin_path(), '/') . '/rounddav_bookmarks.css';
-        }
-
-        $version = file_exists($disk_path) ? (string) filemtime($disk_path) : self::PLUGIN_VERSION;
-        $separator = strpos($public_path, '?') === false ? '?' : '&';
-
-        return $public_path . $separator . 'v=' . rawurlencode($version);
     }
 
     private function build_api_url(string $route): string

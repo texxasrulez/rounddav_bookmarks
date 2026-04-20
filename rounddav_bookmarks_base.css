@@ -302,25 +302,51 @@
 
 .rdv-context-menu {
   position: absolute;
-  background: #fff;
-  border: 1px solid rgba(0,0,0,0.2);
-  border-radius: 6px;
-  box-shadow: 0 8px 20px rgba(0,0,0,0.15);
   z-index: 9999;
-  width: 210px;
+  min-width: var(--rdv-context-menu-min-width);
+  display: block;
+  background: var(--rdv-context-menu-bg) !important;
+  color: var(--rdv-context-menu-text) !important;
+  border: 1px solid var(--rdv-context-menu-border) !important;
+  border-radius: var(--rdv-context-menu-radius) !important;
+  box-shadow: var(--rdv-context-menu-shadow) !important;
+  overflow: hidden;
 }
 
-.rdv-context-menu button {
-  width: 100%;
-  padding: 10px;
-  border: none;
-  background: transparent;
-  text-align: left;
-  cursor: pointer;
+.rdv-context-menu ul {
+  margin: 0;
+  padding: 0;
 }
 
-.rdv-context-menu button:hover {
-  background: rgba(0,0,0,0.05);
+.rdv-context-menu li {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.rdv-context-menu li + li a {
+  border-top: 1px solid var(--rdv-context-menu-separator) !important;
+}
+
+.rdv-context-menu a {
+  display: block;
+  padding: var(--rdv-context-menu-item-padding);
+  background: transparent !important;
+  color: var(--rdv-context-menu-text) !important;
+  text-decoration: none !important;
+  border-left: 0 !important;
+}
+
+.rdv-context-menu a:hover,
+.rdv-context-menu a:focus,
+.rdv-context-menu a.active:hover,
+.rdv-context-menu a.active:focus {
+  background: var(--rdv-context-menu-hover-bg) !important;
+  color: var(--rdv-context-menu-hover-text) !important;
+}
+
+.rdv-context-menu a.active {
+  color: var(--rdv-context-menu-text) !important;
 }
 
 .rdv-bookmarklet-popup {
@@ -348,4 +374,16 @@
 
 .rdv-folder-row select {
   flex-grow: 1;
+}
+.rdv-context-menu {
+  --rdv-context-menu-bg: #ffffff;
+  --rdv-context-menu-text: #2f3b4a;
+  --rdv-context-menu-border: #c6d3da;
+  --rdv-context-menu-hover-bg: #eef5f8;
+  --rdv-context-menu-hover-text: #1f2f3a;
+  --rdv-context-menu-separator: #d9e2e7;
+  --rdv-context-menu-shadow: 0 8px 20px rgba(0,0,0,0.15);
+  --rdv-context-menu-radius: 6px;
+  --rdv-context-menu-min-width: 210px;
+  --rdv-context-menu-item-padding: 10px 14px;
 }

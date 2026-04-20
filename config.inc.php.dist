@@ -1,0 +1,7 @@
+<?php
+
+$config['rounddav_bookmarks_link_menu_enabled'] = true;
+$config['rounddav_bookmarks_link_menu_show_copy'] = true;
+$config['rounddav_bookmarks_link_menu_show_open'] = true;
+$config['rounddav_bookmarks_link_menu_show_private'] = true;
+$config['rounddav_bookmarks_link_menu_show_shared'] = true;

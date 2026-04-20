@@ -59,11 +59,11 @@ Users Bookmarks:
    ```php
    $config['plugins'][] = 'rounddav_bookmarks';
    ```
-3. Optional plugin settings are provided in `plugins/rounddav_bookmarks/config.inc.php.dist`. Copy the values you want into `plugins/rounddav_bookmarks/config.inc.php`.
-4. Clear Roundcube’s cache (`bin/cleandb.sh` or `php bin/console cache:clear` depending on your setup) so the new localization strings and skins are picked up.
-5. Log into Roundcube, open **Settings → Bookmarks**, and drag the **RoundDAV Quick Add** link into your browser’s bookmarks bar if you want the bookmarklet.
+3. Clear Roundcube’s cache (`bin/cleandb.sh` or `php bin/console cache:clear` depending on your setup) so the new localization strings and skins are picked up.
+4. Log into Roundcube, open **Settings → Bookmarks**, and drag the **RoundDAV Quick Add** link into your browser’s bookmarks bar if you want the bookmarklet.
 
-All API credentials are still pulled from `rounddav_provision` via the `rounddav_api_credentials` hook.
+No additional configuration file is required for this plugin; it has no separate `config.inc.php.dist`.
+All API credentials are pulled from `rounddav_provision` via the `rounddav_api_credentials` hook.
 
 Credential/settings source of truth:
 
@@ -72,12 +72,6 @@ Credential/settings source of truth:
   - `rounddav_api_token`
   - `rounddav_api_timeout`
   - `rounddav_api_verify_ssl`
-- `rounddav_bookmarks/config.inc.php`:
-  - `rounddav_bookmarks_link_menu_enabled`
-  - `rounddav_bookmarks_link_menu_show_copy`
-  - `rounddav_bookmarks_link_menu_show_open`
-  - `rounddav_bookmarks_link_menu_show_private`
-  - `rounddav_bookmarks_link_menu_show_shared`
 
 ---
 
@@ -104,14 +98,3 @@ Logs for this plugin go to the standard Roundcube log channels, so check `logs/r
 ## License
 
 Same license as the rest of the RoundDAV Suite. See the repository root for details.
-
-## Versioning
-- `rounddav_bookmarks` now keeps its canonical version in `rounddav_bookmarks::PLUGIN_VERSION` inside `rounddav_bookmarks.php`.
-- `rounddav_bookmarks::info()` exposes the plugin metadata array used for self-identification.
-- Development builds should use a `+dev` suffix such as `1.0.0+dev`.
-- Release builds should use a clean tagged version such as `1.0.0`.
-
-For a release bump:
-1. Update `rounddav_bookmarks::PLUGIN_VERSION` in `rounddav_bookmarks.php` or run `sh scripts/bump-version.sh 1.0.0`.
-2. Update `CHANGELOG.md`.
-3. Create the matching release tag after verification.

@@ -136,7 +136,7 @@
     },
 
     initMailHooks: function() {
-      if (!rcmail.env.rounddav_bookmarks_available || !this.isContextMenuEnabled()) {
+      if (!rcmail.env.rounddav_bookmarks_available) {
         return;
       }
 
@@ -152,9 +152,7 @@
         this.state.frames.add(frame);
         const handler = (ev) => this.handleContextMenu(ev, frame.contentDocument, frame);
         frame.addEventListener('load', () => {
-          if (frame.contentDocument) {
-            frame.contentDocument.addEventListener('contextmenu', handler);
-          }
+          frame.contentDocument && frame.contentDocument.addEventListener('contextmenu', handler);
         });
         if (frame.contentDocument) {
           frame.contentDocument.addEventListener('contextmenu', handler);
@@ -170,9 +168,6 @@
     },
 
     handleContextMenu: function(ev, doc, frame) {
-      if (!this.isContextMenuEnabled() || !this.hasContextMenuActions()) {
-        return;
-      }
       const anchor = ev.target && (ev.target.closest ? ev.target.closest('a') : null);
       if (!anchor || !anchor.href) {
         return;
@@ -201,284 +196,51 @@
       this.ensureMeta().then((meta) => {
         this.closeContextMenu();
         const menu = $('<div class="rdv-context-menu" />');
-        const list = $('<ul class="rdv-context-menu-list" role="menu" />').appendTo(menu);
-        const settings = this.getContextMenuSettings();
-        let itemCount = 0;
-        const addItem = (label, handler) => {
-          const item = $('<li role="menuitem" />').appendTo(list);
-          $('<a href="#" class="active" />')
+        const addButton = (label, visibility) => {
+          $('<button type="button"/>')
             .text(label)
-            .on('click', (ev) => {
-              ev.preventDefault();
-              handler();
+            .on('click', () => {
+              this.saveQuickBookmark(link, visibility);
+              this.closeContextMenu();
             })
-            .appendTo(item);
-          itemCount += 1;
+            .appendTo(menu);
         };
 
-        if (settings.show_copy) {
-          addItem(rcmail.gettext('copylink', 'rounddav_bookmarks'), () => {
-            this.copyLink(link.href).finally(() => this.closeContextMenu());
-          });
-        }
-
-        if (settings.show_open) {
-          addItem(rcmail.gettext('openlink', 'rounddav_bookmarks'), () => {
+        $('<button type="button"/>')
+          .text(rcmail.gettext('openlink', 'rounddav_bookmarks'))
+          .on('click', () => {
             window.open(link.href, '_blank');
             this.closeContextMenu();
-          });
-        }
+          })
+          .appendTo(menu);
 
-        if (settings.show_private) {
-          addItem(rcmail.gettext('contextprivate', 'rounddav_bookmarks'), () => {
-            this.saveQuickBookmark(link, 'private');
-            this.closeContextMenu();
-          });
-        }
+        addButton(rcmail.gettext('contextprivate', 'rounddav_bookmarks'), 'private');
 
-        if (settings.show_shared && meta.shared_enabled) {
+        if (meta.shared_enabled) {
           const label = rcmail.gettext('contextshared', 'rounddav_bookmarks')
             .replace('%s', meta.shared_label || rcmail.gettext('sharedbookmarks', 'rounddav_bookmarks'));
-          addItem(label, () => {
-            this.saveQuickBookmark(link, 'shared');
-            this.closeContextMenu();
-          });
-        }
-
-        if (!itemCount) {
-          return;
+          addButton(label, 'shared');
         }
 
         menu.css({
           left: coords.x + 'px',
           top: coords.y + 'px',
-          visibility: 'hidden',
         });
 
         $(document.body).append(menu);
         this.contextMenu = menu;
-        this.applyContextMenuInlineStyles(menu);
-        menu.css('visibility', 'visible');
-        this.bindContextMenuDismiss(document);
-        document.querySelectorAll('iframe').forEach((frame) => {
-          if (frame.contentDocument) {
-            this.bindContextMenuDismiss(frame.contentDocument);
-          }
-        });
+
+        setTimeout(() => {
+          $(document).on('click.rdv-menu', () => this.closeContextMenu());
+        }, 0);
       });
     },
 
     closeContextMenu: function() {
       if (this.contextMenu) {
-        const menu = this.contextMenu;
-        const node = menu && menu[0];
+        this.contextMenu.remove();
         this.contextMenu = null;
-
-        if (node && node.parentNode) {
-          node.parentNode.removeChild(node);
-        }
-      }
-      this.unbindContextMenuDismiss();
-    },
-
-    getContextMenuSettings: function() {
-      return rcmail.env.rounddav_bookmarks_context_menu || {};
-    },
-
-    applyContextMenuInlineStyles: function(menu) {
-      const node = menu && menu[0];
-      if (!node) {
-        return;
-      }
-
-      const styles = window.getComputedStyle(node);
-      const envTheme = rcmail.env.rounddav_bookmarks_context_menu_theme || {};
-      const mode = document.documentElement.classList.contains('dark-mode') ? 'dark' : 'light';
-      const modeTheme = envTheme[mode] || {};
-      const theme = {
-        background: modeTheme.background || this.readCssVar(styles, '--rdv-context-menu-bg', '#ffffff'),
-        text: modeTheme.text || this.readCssVar(styles, '--rdv-context-menu-text', '#2f3b4a'),
-        border: modeTheme.border || this.readCssVar(styles, '--rdv-context-menu-border', '#c6d3da'),
-        hoverBg: modeTheme.hoverBg || this.readCssVar(styles, '--rdv-context-menu-hover-bg', '#eef5f8'),
-        hoverText: modeTheme.hoverText || this.readCssVar(styles, '--rdv-context-menu-hover-text', '#1f2f3a'),
-        separator: modeTheme.separator || this.readCssVar(styles, '--rdv-context-menu-separator', '#d9e2e7'),
-        shadow: modeTheme.shadow || this.readCssVar(styles, '--rdv-context-menu-shadow', '0 8px 20px rgba(0,0,0,0.15)'),
-        radius: modeTheme.radius || this.readCssVar(styles, '--rdv-context-menu-radius', '6px'),
-        minWidth: modeTheme.minWidth || this.readCssVar(styles, '--rdv-context-menu-min-width', '210px'),
-        itemPadding: modeTheme.itemPadding || this.readCssVar(styles, '--rdv-context-menu-item-padding', '10px 14px'),
-      };
-
-      menu.css({
-        position: 'absolute',
-        zIndex: 9999,
-        display: 'block',
-        minWidth: theme.minWidth,
-        background: theme.background,
-        color: theme.text,
-        border: '1px solid ' + theme.border,
-        borderRadius: theme.radius,
-        boxShadow: theme.shadow,
-        overflow: 'hidden',
-        margin: 0,
-        padding: 0,
-      });
-
-      menu.find('ul').css({
-        margin: 0,
-        padding: 0,
-        listStyle: 'none',
-      });
-
-      menu.find('li').css({
-        listStyle: 'none',
-        margin: 0,
-        padding: 0,
-      });
-
-      menu.find('li + li').css({
-        borderTop: '1px solid ' + theme.separator,
-      });
-
-      menu.find('a').each(function() {
-        const linkEl = $(this);
-        const applyBase = () => linkEl.css({
-          display: 'block',
-          margin: 0,
-          padding: theme.itemPadding,
-          background: 'transparent',
-          color: theme.text,
-          textDecoration: 'none',
-          border: 0,
-          outline: 'none',
-          cursor: 'pointer',
-        });
-        const applyHover = () => linkEl.css({
-          background: theme.hoverBg,
-          color: theme.hoverText,
-        });
-
-        applyBase();
-        linkEl.on('mouseenter focus', applyHover);
-        linkEl.on('mouseleave blur', applyBase);
-      });
-    },
-
-    readCssVar: function(styles, name, fallback) {
-      const value = styles.getPropertyValue(name);
-      return value && value.trim() ? value.trim() : fallback;
-    },
-
-    isContextMenuEnabled: function() {
-      return !!this.getContextMenuSettings().enabled;
-    },
-
-    hasContextMenuActions: function() {
-      const settings = this.getContextMenuSettings();
-      return !!(settings.show_copy || settings.show_open || settings.show_private || settings.show_shared);
-    },
-
-    copyLink: function(href) {
-      if (navigator.clipboard && window.isSecureContext) {
-        return navigator.clipboard.writeText(href).catch(() => {
-          this.copyLinkFallback(href);
-        });
-      }
-
-      this.copyLinkFallback(href);
-      return Promise.resolve();
-    },
-
-    copyLinkFallback: function(href) {
-      const input = document.createElement('textarea');
-      input.value = href;
-      input.setAttribute('readonly', 'readonly');
-      input.style.position = 'absolute';
-      input.style.left = '-9999px';
-      document.body.appendChild(input);
-      input.select();
-      document.execCommand('copy');
-      document.body.removeChild(input);
-    },
-
-    bindContextMenuDismiss: function(doc) {
-      if (!doc) {
-        return;
-      }
-
-      if (!this.boundDismissDocs) {
-        this.boundDismissDocs = new WeakSet();
-      }
-
-      if (this.boundDismissDocs.has(doc)) {
-        return;
-      }
-
-      const dismiss = (ev) => {
-        if (!this.contextMenu) {
-          return;
-        }
-
-        if (doc === document && $(ev.target).closest('.rdv-context-menu').length) {
-          return;
-        }
-
-        this.closeContextMenu();
-      };
-
-      doc.addEventListener('mousedown', dismiss, true);
-      doc.addEventListener('click', dismiss, true);
-      doc.addEventListener('contextmenu', dismiss, true);
-
-      this.boundDismissDocs.add(doc);
-
-      if (!this.dismissHandlers) {
-        this.dismissHandlers = [];
-      }
-
-      this.dismissHandlers.push({
-        doc: doc,
-        dismiss: dismiss,
-      });
-
-      if (!this.keydownDismissHandler) {
-        this.keydownDismissHandler = (ev) => {
-          if (ev.key === 'Escape') {
-            this.closeContextMenu();
-          }
-        };
-        document.addEventListener('keydown', this.keydownDismissHandler, true);
-      }
-
-      if (!this.windowBlurDismissHandler) {
-        this.windowBlurDismissHandler = () => this.closeContextMenu();
-        window.addEventListener('blur', this.windowBlurDismissHandler, true);
-        window.addEventListener('scroll', this.windowBlurDismissHandler, true);
-        window.addEventListener('resize', this.windowBlurDismissHandler, true);
-      }
-    },
-
-    unbindContextMenuDismiss: function() {
-      if (this.dismissHandlers) {
-        this.dismissHandlers.forEach((entry) => {
-          entry.doc.removeEventListener('mousedown', entry.dismiss, true);
-          entry.doc.removeEventListener('click', entry.dismiss, true);
-          entry.doc.removeEventListener('contextmenu', entry.dismiss, true);
-        });
-        this.dismissHandlers = [];
-      }
-
-      this.boundDismissDocs = new WeakSet();
-
-      if (this.keydownDismissHandler) {
-        document.removeEventListener('keydown', this.keydownDismissHandler, true);
-        this.keydownDismissHandler = null;
-      }
-
-      if (this.windowBlurDismissHandler) {
-        window.removeEventListener('blur', this.windowBlurDismissHandler, true);
-        window.removeEventListener('scroll', this.windowBlurDismissHandler, true);
-        window.removeEventListener('resize', this.windowBlurDismissHandler, true);
-        this.windowBlurDismissHandler = null;
+        $(document).off('click.rdv-menu');
       }
     },
 

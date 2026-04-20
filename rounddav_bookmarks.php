@@ -2,20 +2,6 @@
 
 class rounddav_bookmarks extends rcube_plugin
 {
-    const PLUGIN_VERSION = '1.0.1';
-    const PLUGIN_INFO = array(
-        'name' => 'rounddav_bookmarks',
-        'vendor' => 'Gene Hawkins',
-        'version' => self::PLUGIN_VERSION,
-        'license' => 'GPL-3.0-or-later',
-        'uri' => '',
-    );
-
-    public static function info(): array
-    {
-        return self::PLUGIN_INFO;
-    }
-
     public $task   = 'settings|mail';
     public $noajax = false;
 
@@ -27,17 +13,14 @@ class rounddav_bookmarks extends rcube_plugin
     {
         $this->rcmail = rcmail::get_instance();
 
-        $this->load_config('config.inc.php');
         $this->add_texts('localization/', true);
         $this->load_api_credentials();
 
-        $this->include_stylesheet($this->asset_url('rounddav_bookmarks_base.css'));
-        $this->include_stylesheet($this->asset_url($this->local_skin_path() . '/rounddav_bookmarks.css', true));
-        $this->include_script($this->asset_url('rounddav_bookmarks.js'));
+        $this->include_stylesheet('rounddav_bookmarks_base.css');
+        $this->include_stylesheet($this->local_skin_path() . '/rounddav_bookmarks.css');
+        $this->include_script('rounddav_bookmarks.js');
 
         $this->rcmail->output->set_env('rounddav_bookmarks_available', $this->api_credentials ? true : false);
-        $this->rcmail->output->set_env('rounddav_bookmarks_context_menu', $this->get_context_menu_config());
-        $this->rcmail->output->set_env('rounddav_bookmarks_context_menu_theme', $this->get_context_menu_theme());
 
         $this->add_label(
             'rounddav_bookmarks.loading',
@@ -70,8 +53,7 @@ class rounddav_bookmarks extends rcube_plugin
             'rounddav_bookmarks.sharedomains',
             'rounddav_bookmarks.filtertags',
             'rounddav_bookmarks.shareusersplaceholder',
-            'rounddav_bookmarks.sharedomainsplaceholder',
-            'rounddav_bookmarks.copylink'
+            'rounddav_bookmarks.sharedomainsplaceholder'
         );
 
         $this->add_hook('settings_actions', [$this, 'settings_actions']);
@@ -460,147 +442,6 @@ class rounddav_bookmarks extends rcube_plugin
                 $this->missing_credentials_logged = true;
             }
         }
-    }
-
-    private function get_context_menu_config(): array
-    {
-        return [
-            'enabled'       => (bool) $this->rcmail->config->get('rounddav_bookmarks_link_menu_enabled', true),
-            'show_copy'     => (bool) $this->rcmail->config->get('rounddav_bookmarks_link_menu_show_copy', true),
-            'show_open'     => (bool) $this->rcmail->config->get('rounddav_bookmarks_link_menu_show_open', true),
-            'show_private'  => (bool) $this->rcmail->config->get('rounddav_bookmarks_link_menu_show_private', true),
-            'show_shared'   => (bool) $this->rcmail->config->get('rounddav_bookmarks_link_menu_show_shared', true),
-        ];
-    }
-
-    private function get_context_menu_theme(): array
-    {
-        $defaults = [
-            'background' => '#ffffff',
-            'text' => '#2f3b4a',
-            'border' => '#c6d3da',
-            'hoverBg' => '#eef5f8',
-            'hoverText' => '#1f2f3a',
-            'separator' => '#d9e2e7',
-            'shadow' => '0 8px 20px rgba(0,0,0,0.15)',
-            'radius' => '6px',
-            'minWidth' => '210px',
-            'itemPadding' => '10px 14px',
-        ];
-
-        $vars = [];
-        $skin = (string) $this->rcmail->config->get('skin', '');
-        $candidates = [];
-
-        if ($skin !== '') {
-            $candidates[] = $this->home . '/skins/' . $skin . '/rounddav_bookmarks.css';
-        }
-
-        $candidates[] = $this->home . '/' . ltrim($this->local_skin_path(), '/') . '/rounddav_bookmarks.css';
-        $candidates[] = $this->home . '/skins/larry/rounddav_bookmarks.css';
-
-        foreach (array_unique($candidates) as $path) {
-            if (!is_file($path)) {
-                continue;
-            }
-
-            $css = @file_get_contents($path);
-            if (!is_string($css) || $css === '') {
-                continue;
-            }
-
-            $vars = $this->extract_context_menu_vars($css);
-            if ($vars) {
-                break;
-            }
-        }
-
-        $dark_vars = [];
-        foreach (array_unique($candidates) as $path) {
-            if (!is_file($path)) {
-                continue;
-            }
-
-            $css = @file_get_contents($path);
-            if (!is_string($css) || $css === '') {
-                continue;
-            }
-
-            $dark_vars = $this->extract_dark_context_menu_vars($css);
-            if ($dark_vars) {
-                break;
-            }
-        }
-
-        return [
-            'light' => [
-                'background' => $vars['--rdv-context-menu-bg'] ?? $defaults['background'],
-                'text' => $vars['--rdv-context-menu-text'] ?? $defaults['text'],
-                'border' => $vars['--rdv-context-menu-border'] ?? $defaults['border'],
-                'hoverBg' => $vars['--rdv-context-menu-hover-bg'] ?? $defaults['hoverBg'],
-                'hoverText' => $vars['--rdv-context-menu-hover-text'] ?? $defaults['hoverText'],
-                'separator' => $vars['--rdv-context-menu-separator'] ?? $defaults['separator'],
-                'shadow' => $vars['--rdv-context-menu-shadow'] ?? $defaults['shadow'],
-                'radius' => $vars['--rdv-context-menu-radius'] ?? $defaults['radius'],
-                'minWidth' => $vars['--rdv-context-menu-min-width'] ?? $defaults['minWidth'],
-                'itemPadding' => $vars['--rdv-context-menu-item-padding'] ?? $defaults['itemPadding'],
-            ],
-            'dark' => [
-                'background' => $dark_vars['--rdv-context-menu-bg'] ?? ($vars['--rdv-context-menu-bg'] ?? $defaults['background']),
-                'text' => $dark_vars['--rdv-context-menu-text'] ?? ($vars['--rdv-context-menu-text'] ?? $defaults['text']),
-                'border' => $dark_vars['--rdv-context-menu-border'] ?? ($vars['--rdv-context-menu-border'] ?? $defaults['border']),
-                'hoverBg' => $dark_vars['--rdv-context-menu-hover-bg'] ?? ($vars['--rdv-context-menu-hover-bg'] ?? $defaults['hoverBg']),
-                'hoverText' => $dark_vars['--rdv-context-menu-hover-text'] ?? ($vars['--rdv-context-menu-hover-text'] ?? $defaults['hoverText']),
-                'separator' => $dark_vars['--rdv-context-menu-separator'] ?? ($vars['--rdv-context-menu-separator'] ?? $defaults['separator']),
-                'shadow' => $dark_vars['--rdv-context-menu-shadow'] ?? ($vars['--rdv-context-menu-shadow'] ?? $defaults['shadow']),
-                'radius' => $dark_vars['--rdv-context-menu-radius'] ?? ($vars['--rdv-context-menu-radius'] ?? $defaults['radius']),
-                'minWidth' => $dark_vars['--rdv-context-menu-min-width'] ?? ($vars['--rdv-context-menu-min-width'] ?? $defaults['minWidth']),
-                'itemPadding' => $dark_vars['--rdv-context-menu-item-padding'] ?? ($vars['--rdv-context-menu-item-padding'] ?? $defaults['itemPadding']),
-            ],
-            'skin' => $skin !== '' ? $skin : basename((string) $this->local_skin_path()),
-        ];
-    }
-
-    private function extract_context_menu_vars(string $css): array
-    {
-        return $this->extract_context_menu_vars_for_selector($css, '\.rdv-context-menu');
-    }
-
-    private function extract_dark_context_menu_vars(string $css): array
-    {
-        return $this->extract_context_menu_vars_for_selector($css, 'html\.dark-mode\s+\.rdv-context-menu');
-    }
-
-    private function extract_context_menu_vars_for_selector(string $css, string $selector): array
-    {
-        if (!preg_match('/' . $selector . '\s*\{([^}]*)\}/s', $css, $matches)) {
-            return [];
-        }
-
-        $vars = [];
-        if (preg_match_all('/(--rdv-context-menu-[a-z-]+)\s*:\s*([^;]+);/', $matches[1], $var_matches, PREG_SET_ORDER)) {
-            foreach ($var_matches as $match) {
-                $vars[trim($match[1])] = trim($match[2]);
-            }
-        }
-
-        return $vars;
-    }
-
-    private function asset_url(string $asset, bool $skin_asset = false): string
-    {
-        $public_path = $asset;
-        $disk_path = $this->home . '/' . ltrim($asset, '/');
-
-        if ($skin_asset) {
-            $public_path = $asset;
-            $disk_path = $this->home . '/' . ltrim($this->local_skin_path(), '/') . '/rounddav_bookmarks.css';
-        }
-
-        $version = file_exists($disk_path) ? (string) filemtime($disk_path) : self::PLUGIN_VERSION;
-        $separator = strpos($public_path, '?') === false ? '?' : '&';
-
-        return $public_path . $separator . 'v=' . rawurlencode($version);
     }
 
     private function build_api_url(string $route): string

@@ -35,6 +35,7 @@ $labels['createfolder'] = 'Create folder';
 $labels['promptfoldername'] = 'Folder name';
 $labels['foldercreated'] = 'Folder created';
 $labels['openlink'] = 'Open link';
+$labels['copylink'] = 'Copy Link';
 $labels['contextprivate'] = 'Save to My Bookmarks';
 $labels['contextshared'] = 'Save to %s';
 $labels['quickaddtitle'] = 'Quick Add Bookmark';

@@ -1,3 +1,13 @@
+.rdv-context-menu {
+  --rdv-context-menu-bg: #e5d8ac;
+  --rdv-context-menu-text: #81580d;
+  --rdv-context-menu-border: #ccb159;
+  --rdv-context-menu-hover-bg: #c89723;
+  --rdv-context-menu-hover-text: #fff;
+  --rdv-context-menu-separator: #ccb159;
+  --rdv-context-menu-shadow: 0 8px 20px rgba(122, 90, 16, 0.18);
+}
+
 #settings-sections a.rounddav_bookmarks,
 #settings-sections li.rounddav_bookmarks > a,
 a.listitem.rounddav_bookmarks,

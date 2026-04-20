@@ -1,3 +1,23 @@
+.rdv-context-menu {
+  --rdv-context-menu-bg: #ffffff;
+  --rdv-context-menu-text: #2c363a;
+  --rdv-context-menu-border: #d4dbde;
+  --rdv-context-menu-hover-bg: #ebf9ff;
+  --rdv-context-menu-hover-text: #2c363a;
+  --rdv-context-menu-separator: #edf1f3;
+  --rdv-context-menu-shadow: 0 8px 20px rgba(44, 54, 58, 0.16);
+}
+
+html.dark-mode .rdv-context-menu {
+  --rdv-context-menu-bg: #2c363a;
+  --rdv-context-menu-text: #f1f3f4;
+  --rdv-context-menu-border: #46545b;
+  --rdv-context-menu-hover-bg: #3b4a52;
+  --rdv-context-menu-hover-text: #ffffff;
+  --rdv-context-menu-separator: #46545b;
+  --rdv-context-menu-shadow: 0 10px 24px rgba(0, 0, 0, 0.35);
+}
+
 .listing.iconized li.rounddav_bookmarks > a:before {
   content: "\f02e"
 }
